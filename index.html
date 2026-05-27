@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORYNEX - Securing Brand Deals. Elevating Positioning.</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        orynexDark: '#05070A',
+                        orynexCard: '#0A0E17',
+                        orynexCardMuted: '#101624',
+                        goldLight: '#FFF1D0',
+                        goldMid: '#E2C485',
+                        goldDark: '#A88241',
+                        neonPurple: '#8B5CF6',
+                        neonCyan: '#06B6D4',
+                        neonGreen: '#10B981',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* Premium custom animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        
+        /* Shimmer effect for action buttons */
+        @keyframes shimmer {
+            100% { transform: translateX(100%); }
+        }
+        .shimmer-btn::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            transform: translateX(-100%);
+            background-image: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.15) 20%,
+                rgba(255, 255, 255, 0.3) 60%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            animation: shimmer 2.5s infinite;
+        }
+
+        /* Ambient Glow Dynamic Overrides based on Theme Aura */
+        .theme-gold .glow-accent {
+            background-image: radial-gradient(circle, rgba(226, 196, 133, 0.12) 0%, transparent 70%);
+        }
+        .theme-cyber .glow-accent {
+            background-image: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 70%);
+        }
+        .theme-emerald .glow-accent {
+            background-image: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 70%);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #05070A;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1E293B;
+            border-radius: 10px;
+            border: 2px solid #05070A;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #A88241;
+        }
+    </style>
+</head>
+<body class="bg-orynexDark text-slate-100 selection:bg-amber-500 selection:text-black overflow-x-hidden min-h-screen theme-gold transition-colors duration-500">
+
+    <!-- Ambient background lighting dynamic containers -->
+    <div id="glow-container">
+        <div class="absolute top-0 left-0 right-0 h-[900px] glow-accent pointer-events-none z-0 transition-all duration-700"></div>
+        <div class="absolute top-[25%] right-[5%] w-[400px] h-[400px] rounded-full blur-[160px] pointer-events-none z-0 opacity-40 bg-amber-500/10"></div>
+        <div class="absolute top-[60%] left-[2%] w-[500px] h-[500px] rounded-full blur-[200px] pointer-events-none z-0 opacity-40 bg-blue-500/10"></div>
+    </div>
+
+    <!-- Custom notification container -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- Floating visual mode selection widgets -->
+    <div class="fixed bottom-6 left-6 z-50 hidden md:flex items-center gap-2 bg-orynexCard/95 border border-white/10 p-2 rounded-full backdrop-blur-md shadow-2xl">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 pl-3 pr-1">Aura:</span>
+        <button onclick="setTheme('gold')" class="w-6 h-6 rounded-full bg-amber-500 border border-white/20 transition-transform duration-300 hover:scale-125" title="Aether Gold"></button>
+        <button onclick="setTheme('cyber')" class="w-6 h-6 rounded-full bg-violet-600 border border-white/20 transition-transform duration-300 hover:scale-125" title="Cyber Neon"></button>
+        <button onclick="setTheme('emerald')" class="w-6 h-6 rounded-full bg-emerald-500 border border-white/20 transition-transform duration-300 hover:scale-125" title="Esports Emerald"></button>
+    </div>
+
+    <header class="sticky top-0 z-40 backdrop-blur-lg bg-orynexDark/85 border-b border-white/10 px-4 lg:px-8 py-3.5 transition-all duration-300">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            
+            <!-- Dynamic Logo -->
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="switchTab('home')">
+                <div class="relative w-11 h-11 flex items-center justify-center transform group-hover:scale-105 transition-transform duration-300">
+                    <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-[0_0_10px_rgba(245,158,11,0.3)]">
+                        <defs>
+                            <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#FFF1D0" />
+                                <stop offset="40%" stop-color="#E2C485" />
+                                <stop offset="70%" stop-color="#A88241" />
+                                <stop offset="100%" stop-color="#785B23" />
+                            </linearGradient>
+                            <linearGradient id="silverGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#FFFFFF" />
+                                <stop offset="50%" stop-color="#CBD5E1" />
+                                <stop offset="100%" stop-color="#64748B" />
+                            </linearGradient>
+                        </defs>
+                        <polygon points="50,5 90,28 90,72 50,95 10,72 10,28" fill="none" stroke="url(#goldGrad)" stroke-width="3" />
+                        <path d="M 50,15 L 78,31 L 63,50 Z" fill="url(#goldGrad)" opacity="0.95" />
+                        <path d="M 78,31 L 78,63 L 50,58 Z" fill="url(#silverGrad)" opacity="0.9" />
+                        <path d="M 78,63 L 50,85 L 37,63 Z" fill="url(#goldGrad)" opacity="0.95" />
+                        <path d="M 50,85 L 22,69 L 37,50 Z" fill="url(#silverGrad)" opacity="0.9" />
+                        <path d="M 22,69 L 22,37 L 50,42 Z" fill="url(#goldGrad)" opacity="0.95" />
+                        <path d="M 22,37 L 50,15 L 63,37 Z" fill="url(#silverGrad)" opacity="0.9" />
+                        <polygon points="50,38 61,44 61,56 50,62 39,56 39,44" fill="#05070A" />
+                    </svg>
+                </div>
+                <div>
+                    <span class="font-black text-2xl tracking-widest bg-gradient-to-r from-white via-goldMid to-goldDark bg-clip-text text-transparent group-hover:brightness-110 transition-all">
+                        ORYNEX
+                    </span>
+                    <div class="text-[9px] tracking-[0.25em] text-amber-500 uppercase font-bold text-theme-element">CLARITY • POSITIONING</div>
+                </div>
+            </div>
+
+            <!-- Main Navigation Links -->
+            <nav class="hidden md:flex items-center gap-1">
+                <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 bg-amber-500/20 border border-amber-500/30 text-amber-400">
+                    <i class="fa-solid fa-compass mr-1.5"></i>Overview
+                </button>
+                <button onclick="switchTab('creators')" id="nav-creators" class="nav-btn px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 text-slate-400 hover:text-white hover:bg-white/5 border border-transparent">
+                    <i class="fa-solid fa-gamepad mr-1.5"></i>For Creators
+                </button>
+                <button onclick="switchTab('developers')" id="nav-developers" class="nav-btn px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 text-slate-400 hover:text-white hover:bg-white/5 border border-transparent">
+                    <i class="fa-solid fa-code mr-1.5"></i>For Developers
+                </button>
+                <button onclick="switchTab('masters')" id="nav-masters" class="nav-btn px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 text-slate-400 hover:text-white hover:bg-white/5 border border-transparent">
+                    <i class="fa-solid fa-trophy mr-1.5"></i>Dekho Masters Event
+                </button>
+                <button onclick="switchTab('contact')" id="nav-contact" class="nav-btn px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 text-slate-400 hover:text-white hover:bg-white/5 border border-transparent">
+                    <i class="fa-solid fa-envelope mr-1.5"></i>Contact Us
+                </button>
+            </nav>
+
+            <!-- Collaboration Activation Button -->
+            <div class="flex items-center gap-3">
+                <button onclick="switchTab('collaboration')" id="header-collab-btn" class="shimmer-btn relative overflow-hidden rounded-full bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs tracking-wider px-6 py-3 transition-all duration-300 shadow-[0_0_20px_rgba(245,158,11,0.5)] hover:scale-105 active:scale-95">
+                    COLLABORATION LIST
+                </button>
+                
+                <!-- Mobile Navigation Menu Toggle -->
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-slate-400 hover:text-white focus:outline-none">
+                    <i class="fa-solid fa-bars text-xl" id="menu-icon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="hidden md:hidden fixed inset-x-0 top-[73px] bg-orynexDark/95 border-b border-white/10 z-40 p-5 space-y-3 backdrop-blur-xl animate-fade-in shadow-2xl">
+        <button onclick="switchTab('home'); toggleMobileMenu()" class="w-full text-left py-3 px-4 rounded-xl text-sm font-bold text-white hover:bg-white/5 flex items-center gap-3">
+            <i class="fa-solid fa-compass text-amber-500"></i> Overview
+        </button>
+        <button onclick="switchTab('creators'); toggleMobileMenu()" class="w-full text-left py-3 px-4 rounded-xl text-sm font-bold text-white hover:bg-white/5 flex items-center gap-3">
+            <i class="fa-solid fa-gamepad text-amber-500"></i> For Creators
+        </button>
+        <button onclick="switchTab('developers'); toggleMobileMenu()" class="w-full text-left py-3 px-4 rounded-xl text-sm font-bold text-white hover:bg-white/5 flex items-center gap-3">
+            <i class="fa-solid fa-code text-amber-500"></i> For Developers
+        </button>
+        <button onclick="switchTab('masters'); toggleMobileMenu()" class="w-full text-left py-3 px-4 rounded-xl text-sm font-bold text-white hover:bg-white/5 flex items-center gap-3">
+            <i class="fa-solid fa-trophy text-amber-500"></i> Dekho Masters Event
+        </button>
+        <button onclick="switchTab('contact'); toggleMobileMenu()" class="w-full text-left py-3 px-4 rounded-xl text-sm font-bold text-white hover:bg-white/5 flex items-center gap-3">
+            <i class="fa-solid fa-envelope text-amber-500"></i> Contact Us
+        </button>
+        <div class="pt-4 border-t border-white/5">
+            <button onclick="switchTab('collaboration'); toggleMobileMenu()" class="w-full text-center py-3 rounded-xl bg-amber-500 text-black font-extrabold text-sm tracking-wider shadow-lg hover:bg-amber-400">
+                COLLABORATION LIST
+            </button>
+        </div>
+        <!-- Aura selection drawer elements -->
+        <div class="flex items-center justify-between pt-3 border-t border-white/5">
+            <span class="text-[11px] uppercase tracking-wider text-slate-500 font-bold">Atmosphere Tint</span>
+            <div class="flex gap-3">
+                <button onclick="setTheme('gold')" class="w-6 h-6 rounded-full bg-amber-500 border border-white/20" title="Aether Gold"></button>
+                <button onclick="setTheme('cyber')" class="w-6 h-6 rounded-full bg-violet-600 border border-white/20" title="Cyber Neon"></button>
+                <button onclick="setTheme('emerald')" class="w-6 h-6 rounded-full bg-emerald-500 border border-white/20" title="Esports Emerald"></button>
+            </div>
+        </div>
+    </div>
+
+    <main id="tab-home" class="tab-content max-w-7xl mx-auto px-4 md:px-8 py-8 animate-fade-in">
+        
+        <!-- Hero Spotlight Block -->
+        <div class="text-center max-w-4xl mx-auto mt-10 md:mt-16 mb-20 relative">
+            <div class="inline-flex items-center gap-2 px-4.5 py-2.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold tracking-widest uppercase mb-8 shadow-[0_0_15px_rgba(245,158,11,0.1)]">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
+                🌟 Empowering the Next Apex of Creator Competition
+            </div>
+            
+            <h1 class="text-4xl sm:text-6xl lg:text-8xl font-black tracking-tight leading-none text-white">
+                Securing Brand Deals.
+                <span class="block mt-3 bg-gradient-to-r from-goldLight via-goldMid to-goldDark bg-clip-text text-transparent pb-2 text-theme-gradient">
+                    Elevating Positioning.
+                </span>
+            </h1>
+            
+            <p class="mt-8 text-base sm:text-lg lg:text-xl text-slate-300 max-w-3xl mx-auto font-light leading-relaxed">
+                ORYNEX is a premium monetization ecosystem and custom event agency focusing on <strong class="text-white font-semibold">Absolute Clarity</strong>. 
+                We engineer solid commercial campaigns, direct tournament setups, and seal high-yielding brand deals.
+            </p>
+
+            <div class="mt-12 flex flex-col sm:flex-row justify-center gap-4 max-w-md mx-auto sm:max-w-none">
+                <button onclick="switchTab('creators')" class="shimmer-btn relative overflow-hidden px-8 py-4.5 rounded-xl bg-gradient-to-r from-amber-400 to-goldDark hover:brightness-110 text-black font-extrabold tracking-wider shadow-2xl hover:shadow-[0_0_25px_rgba(245,158,11,0.35)] transition-all flex items-center justify-center gap-2">
+                    I AM A CREATOR <i class="fa-solid fa-arrow-trend-up"></i>
+                </button>
+                <button onclick="switchTab('developers')" class="px-8 py-4.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-white font-extrabold tracking-wider transition-all hover:border-slate-400">
+                    I AM A GAME DEVELOPER
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-16">
+            <!-- Creator Pathway Card -->
+            <div class="relative group overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-transparent p-8 md:p-10 hover:border-amber-500/30 transition-all duration-500 flex flex-col justify-between shadow-lg">
+                <div>
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="p-3.5 rounded-2xl bg-amber-500/10 text-amber-400 group-hover:scale-110 transition-transform duration-300">
+                            <i class="fa-solid fa-bolt text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-black text-white">For Creators</h3>
+                            <p class="text-xs text-slate-500 uppercase tracking-widest">Growth, Protection & Agency care</p>
+                        </div>
+                    </div>
+                    <p class="text-slate-400 mb-8 leading-relaxed font-light">
+                        Never struggle with negotiating brand contracts again. We align your creative community with structured game activations, custom tournaments, and sponsors who respect your creative space.
+                    </p>
+                    <ul class="space-y-3.5 mb-8">
+                        <li class="flex items-center gap-3 text-sm text-slate-300">
+                            <span class="text-amber-500"><i class="fa-solid fa-check"></i></span> Premium Direct Sponsorship Outreach
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-slate-300">
+                            <span class="text-amber-500"><i class="fa-solid fa-check"></i></span> Complete Dedicated Career Management
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-slate-300">
+                            <span class="text-amber-500"><i class="fa-solid fa-check"></i></span> Legal Contract clearance & Transparency
+                        </li>
+                    </ul>
+                </div>
+                <button onclick="switchTab('creators')" class="text-amber-400 hover:text-white font-extrabold text-sm flex items-center gap-2 group-hover:translate-x-2 transition-transform duration-300">
+                    Unlock Your Potential <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- Developer Pathway Card -->
+            <div class="relative group overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-transparent p-8 md:p-10 hover:border-violet-500/30 transition-all duration-500 flex flex-col justify-between shadow-lg">
+                <div>
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="p-3.5 rounded-2xl bg-violet-500/10 text-violet-400 group-hover:scale-110 transition-transform duration-300">
+                            <i class="fa-solid fa-terminal text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-black text-white">For Game Devs</h3>
+                            <p class="text-xs text-slate-500 uppercase tracking-widest">Active Player Acquisition</p>
+                        </div>
+                    </div>
+                    <p class="text-slate-400 mb-8 leading-relaxed font-light">
+                        Deploy your game's multiplayer potential organically. We coordinate high-participation tournament blueprints matching your budget size, using real creator alignment to secure live audiences.
+                    </p>
+                    <ul class="space-y-3.5 mb-8">
+                        <li class="flex items-center gap-3 text-sm text-slate-300">
+                            <span class="text-violet-400"><i class="fa-solid fa-check"></i></span> Custom Multi-Tier Tournament Outlines
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-slate-300">
+                            <span class="text-violet-400"><i class="fa-solid fa-check"></i></span> Live Interactive Alpha Testing Lobbies
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-slate-300">
+                            <span class="text-violet-400"><i class="fa-solid fa-check"></i></span> Custom Game Promotion & Player Scaling
+                        </li>
+                    </ul>
+                </div>
+                <button onclick="switchTab('developers')" class="text-violet-400 hover:text-white font-extrabold text-sm flex items-center gap-2 group-hover:translate-x-2 transition-transform duration-300">
+                    Launch Your Title <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Professional Pillars -->
+        <div class="mt-28 border-t border-white/10 pt-20 mb-12">
+            <div class="text-center mb-16">
+                <span class="text-xs font-extrabold text-slate-500 uppercase tracking-widest">Why We Stand Apart</span>
+                <h2 class="text-3xl md:text-5xl font-black text-white mt-2">Professional Pillars</h2>
+                <p class="text-slate-400 mt-3 max-w-xl mx-auto font-light">
+                    No deceptive jargon. No hidden fee adjustments. Absolute alignment built for creative professionals.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Pillar 1 -->
+                <div class="bg-gradient-to-b from-white/[0.02] to-transparent border border-white/5 hover:border-amber-500/20 transition-all rounded-2xl p-8 group">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-black text-xl mb-6 group-hover:scale-110 transition-transform">01</div>
+                    <h4 class="text-xl font-extrabold text-white mb-2">Pricing Transparency</h4>
+                    <p class="text-xs font-semibold text-amber-400 uppercase tracking-wider mb-4">You See What Brands Spend</p>
+                    <p class="text-sm text-slate-400 leading-relaxed font-light">
+                        We reveal the exact sponsorship payout numbers of our partner brands. We never skim margins or hide the baseline.
+                    </p>
+                </div>
+                <!-- Pillar 2 -->
+                <div class="bg-gradient-to-b from-white/[0.02] to-transparent border border-white/5 hover:border-amber-500/20 transition-all rounded-2xl p-8 group">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-black text-xl mb-6 group-hover:scale-110 transition-transform">02</div>
+                    <h4 class="text-xl font-extrabold text-white mb-2">True Creative Freedom</h4>
+                    <p class="text-xs font-semibold text-amber-400 uppercase tracking-wider mb-4">No Rigid Corporate Ties</p>
+                    <p class="text-sm text-slate-400 leading-relaxed font-light">
+                        Your channels are yours. We pitch, protect, and deliver brand briefs that integrate comfortably with your daily aesthetic.
+                    </p>
+                </div>
+                <!-- Pillar 3 -->
+                <div class="bg-gradient-to-b from-white/[0.02] to-transparent border border-white/5 hover:border-amber-500/20 transition-all rounded-2xl p-8 group">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-black text-xl mb-6 group-hover:scale-110 transition-transform">03</div>
+                    <h4 class="text-xl font-extrabold text-white mb-2">Sustainable Monetization</h4>
+                    <p class="text-xs font-semibold text-amber-400 uppercase tracking-wider mb-4">Consistent Brand Pipelines</p>
+                    <p class="text-sm text-slate-400 leading-relaxed font-light">
+                        Stop bouncing from one-off sponsorships to dry periods. Our active model aligns you with secure multi-month campaigns.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section id="tab-creators" class="tab-content hidden max-w-7xl mx-auto px-4 md:px-8 py-8 animate-fade-in">
+        <div class="text-center mb-16">
+            <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Creator Support Ecosystem</span>
+            <h2 class="text-4xl md:text-5xl font-black text-white mt-2">What We Provide To Creators</h2>
+            <p class="text-slate-400 mt-4 max-w-2xl mx-auto font-light">
+                We don't restrict you with complex lock-ins. Our focus is to secure your growth pipeline and handle active operations under absolute clarity.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            <!-- Sponsorships card -->
+            <div class="bg-orynexCard border border-white/5 rounded-3xl p-8 hover:border-amber-500/30 transition-all duration-300 relative group">
+                <div class="absolute -top-10 -right-10 w-24 h-24 bg-amber-500/5 rounded-full blur-[40px] pointer-events-none"></div>
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-14 h-14 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-2xl flex items-center justify-center text-2xl group-hover:scale-105 transition-transform duration-300">
+                        <i class="fa-solid fa-handshake-simple"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Sponsorships</h3>
+                        <p class="text-xs text-slate-500 uppercase tracking-wider">High-yield integrations</p>
+                    </div>
+                </div>
+                <p class="text-slate-400 text-sm font-light leading-relaxed mb-6">
+                    Gain exclusive pathways to premium corporate sponsorships. We bypass traditional, low-rate broker platforms and connect you directly with key game publishers and consumer brands at fair, transparent market values.
+                </p>
+                <div class="bg-orynexDark/50 border border-white/5 p-4 rounded-xl">
+                    <span class="text-[10px] text-amber-400 font-bold uppercase tracking-wider block mb-1">Impact Highlight</span>
+                    <p class="text-xs text-slate-300 font-light">Direct contracts with upfront payouts escrow-secured prior to launch.</p>
+                </div>
+            </div>
+
+            <!-- Content Manager card -->
+            <div class="bg-orynexCard border border-white/5 rounded-3xl p-8 hover:border-amber-500/30 transition-all duration-300 relative group">
+                <div class="absolute -top-10 -right-10 w-24 h-24 bg-amber-500/5 rounded-full blur-[40px] pointer-events-none"></div>
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-14 h-14 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-2xl flex items-center justify-center text-2xl group-hover:scale-105 transition-transform duration-300">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Content Manager</h3>
+                        <p class="text-xs text-slate-500 uppercase tracking-wider">Metrics and layout optimization</p>
+                    </div>
+                </div>
+                <p class="text-slate-400 text-sm font-light leading-relaxed mb-6">
+                    Scale your dynamic content loops. Our specialist content guides evaluate your stream formats, clip pacing, thumbnails, and localized titles to secure better search indexes and community engagement.
+                </p>
+                <div class="bg-orynexDark/50 border border-white/5 p-4 rounded-xl">
+                    <span class="text-[10px] text-amber-400 font-bold uppercase tracking-wider block mb-1">Impact Highlight</span>
+                    <p class="text-xs text-slate-300 font-light">Weekly analytic breakdowns.</p>
+                </div>
+            </div>
+
+            <!-- Personal Manager card -->
+            <div class="bg-orynexCard border border-white/5 rounded-3xl p-8 hover:border-amber-500/30 transition-all duration-300 relative group">
+                <div class="absolute -top-10 -right-10 w-24 h-24 bg-amber-500/5 rounded-full blur-[40px] pointer-events-none"></div>
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-14 h-14 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-2xl flex items-center justify-center text-2xl group-hover:scale-105 transition-transform duration-300">
+                        <i class="fa-solid fa-user-tie"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Personal Manager</h3>
+                        <p class="text-xs text-slate-500 uppercase tracking-wider">Dedicated operation pipelines</p>
+                    </div>
+                </div>
+                <p class="text-slate-400 text-sm font-light leading-relaxed mb-6">
+                    Focus strictly on the creative workspace. Your personal manager handles incoming brand emails, structures scheduling plans, resolves calendar conflicts, and maintains legal contract clearings.
+                </p>
+                <div class="bg-orynexDark/50 border border-white/5 p-4 rounded-xl">
+                    <span class="text-[10px] text-amber-400 font-bold uppercase tracking-wider block mb-1">Impact Highlight</span>
+                    <p class="text-xs text-slate-300 font-light">Fast communications support to coordinate and represent your business brand.</p>
+                </div>
+            </div>
+
+            <!-- Social Work Manager card -->
+            <div class="bg-orynexCard border border-white/5 rounded-3xl p-8 hover:border-amber-500/30 transition-all duration-300 relative group">
+                <div class="absolute -top-10 -right-10 w-24 h-24 bg-amber-500/5 rounded-full blur-[40px] pointer-events-none"></div>
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-14 h-14 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-2xl flex items-center justify-center text-2xl group-hover:scale-105 transition-transform duration-300">
+                        <i class="fa-solid fa-share-nodes"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Social Work Manager</h3>
+                        <p class="text-xs text-slate-500 uppercase tracking-wider">Outreach &amp; Public Relations</p>
+                    </div>
+                </div>
+                <p class="text-slate-400 text-sm font-light leading-relaxed mb-6">
+                    Enhance your positioning across secondary platforms. We implement targeted social campaigns, organize community event appearances, coordinate cross-collaborations, and protect your community's reputation.
+                </p>
+                <div class="bg-orynexDark/50 border border-white/5 p-4 rounded-xl">
+                    <span class="text-[10px] text-amber-400 font-bold uppercase tracking-wider block mb-1">Impact Highlight</span>
+                    <p class="text-xs text-slate-300 font-light">Organizes dynamic creator-to-creator crossover matches and PR setups.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-16">
+            <button onclick="switchTab('contact')" class="shimmer-btn relative overflow-hidden px-10 py-5 rounded-xl bg-gradient-to-r from-amber-400 to-goldDark hover:brightness-110 text-black font-extrabold tracking-wider shadow-2xl hover:shadow-[0_0_25px_rgba(245,158,11,0.35)] transition-all">
+                REQUEST PERSONAL MANAGEMENT CORE &rarr;
+            </button>
+        </div>
+    </section>
+
+    <section id="tab-developers" class="tab-content hidden max-w-7xl mx-auto px-4 md:px-8 py-8 animate-fade-in">
+        <div class="text-center mb-16">
+            <span class="text-xs font-bold text-violet-400 uppercase tracking-widest">Multiplayer Growth Systems</span>
+            <h2 class="text-4xl md:text-5xl font-black text-white mt-2">Scale Your Game's Ecosystem</h2>
+            <p class="text-slate-400 mt-4 max-w-2xl mx-auto font-light leading-relaxed">
+                Unlock viral play loops, organic streamer attention, and structured creator distribution models designed to scale your game database seamlessly.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left funnel steps card: points to scale -->
+            <div class="lg:col-span-2 bg-gradient-to-b from-white/[0.03] to-transparent border border-white/5 rounded-3xl p-8">
+                <h3 class="text-2xl font-bold text-white mb-6">If you want to scale your game to a high member base, here are the points to scale:</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                    <!-- Point 1 -->
+                    <div class="bg-orynexCard border border-white/5 p-6 rounded-2xl">
+                        <div class="w-10 h-10 rounded-xl bg-violet-500/10 text-violet-400 flex items-center justify-center font-bold mb-4">
+                            <i class="fa-solid fa-users-viewfinder text-lg"></i>
+                        </div>
+                        <h4 class="text-base font-bold text-white mb-2">Mass Streamer Bundling</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed font-light">
+                            Deploy hundreds of mid-tier and micro-creators concurrently rather than relying on single, high-cost placements. Multi-streamer synchronization generates authentic viral loops.
+                        </p>
+                    </div>
+
+                    <!-- Point 2 -->
+                    <div class="bg-orynexCard border border-white/5 p-6 rounded-2xl">
+                        <div class="w-10 h-10 rounded-xl bg-violet-500/10 text-violet-400 flex items-center justify-center font-bold mb-4">
+                            <i class="fa-solid fa-gamepad text-lg"></i>
+                        </div>
+                        <h4 class="text-base font-bold text-white mb-2">Interactive Lobby Activations</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed font-light">
+                            Host matches where content creators directly invite their live viewers to play side-by-side inside multiplayer custom servers, generating unprecedented viewer retention metrics.
+                        </p>
+                    </div>
+
+                    <!-- Point 3 -->
+                    <div class="bg-orynexCard border border-white/5 p-6 rounded-2xl">
+                        <div class="w-10 h-10 rounded-xl bg-violet-500/10 text-violet-400 flex items-center justify-center font-bold mb-4">
+                            <i class="fa-solid fa-chart-line text-lg"></i>
+                        </div>
+                        <h4 class="text-base font-bold text-white mb-2">Optimized In-Game Drop Events</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed font-light">
+                            We integrate precise twitch/youtube stream distribution trackers that dynamically reward players with game codes and custom cosmetics in real-time.
+                        </p>
+                    </div>
+
+                    <!-- Point 4 -->
+                    <div class="bg-orynexCard border border-white/5 p-6 rounded-2xl">
+                        <div class="w-10 h-10 rounded-xl bg-violet-500/10 text-violet-400 flex items-center justify-center font-bold mb-4">
+                            <i class="fa-solid fa-award text-lg"></i>
+                        </div>
+                        <h4 class="text-base font-bold text-white mb-2">Ranked Placement Leagues</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed font-light">
+                            Structure micro-tournaments inside local regions. This incentivizes competitive gaming guilds to constantly practice, stream, and log daily play records on your multiplayer builds.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mail Sponsorship block -->
+            <div class="bg-orynexCard border border-violet-500/20 rounded-3xl p-8 flex flex-col justify-between text-center relative overflow-hidden shadow-2xl">
+                <div class="absolute -top-12 -right-12 w-32 h-32 bg-violet-500/5 rounded-full blur-[60px]"></div>
+                
+                <div>
+                    <div class="w-16 h-16 bg-violet-500/10 text-violet-400 border border-violet-500/20 rounded-2xl flex items-center justify-center mx-auto text-2xl mb-6">
+                        <i class="fa-solid fa-envelope-open-text animate-bounce"></i>
+                    </div>
+                    
+                    <h3 class="text-2xl font-black text-white mb-2">Let's Fuel Your Launch</h3>
+                    <p class="text-xs text-slate-400 font-light leading-relaxed mb-6">
+                        Looking to sponsor an official competitive bracket, run localized game lobbies, or configure creator drop packages? Contact our business development desk directly.
+                    </p>
+                    
+                    <div class="bg-orynexDark border border-white/5 rounded-2xl p-4.5 mb-6">
+                        <span class="text-[10px] text-slate-500 uppercase font-black tracking-wider block mb-1">Official Sponsorship Desk</span>
+                        <a href="mailto:orynexstudio@gmail.com" class="text-sm font-black text-violet-400 hover:underline">orynexstudio@gmail.com</a>
+                    </div>
+                </div>
+                
+                <button onclick="copyEmail()" class="w-full py-4.5 rounded-xl bg-violet-600 text-white font-extrabold text-xs uppercase tracking-wider hover:bg-violet-500 transition-all shadow-md">
+                    <i class="fa-regular fa-clipboard mr-1.5"></i> Copy Sponsorship Mail
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="tab-masters" class="tab-content hidden max-w-7xl mx-auto px-4 md:px-8 py-8 animate-fade-in">
+        <div class="min-h-[500px] flex flex-col items-center justify-center text-center relative rounded-3xl border border-white/5 bg-orynexCard overflow-hidden py-24 px-6">
+            <div class="absolute -top-32 -right-32 w-96 h-96 bg-amber-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+            <div class="absolute -bottom-32 -left-32 w-96 h-96 bg-blue-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+            
+            <div class="inline-flex items-center gap-2 px-4.5 py-2.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold tracking-widest uppercase mb-8 shadow-[0_0_15px_rgba(245,158,11,0.1)]">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
+                🏆 Official Competitive Season Setup
+            </div>
+            
+            <h2 class="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none text-white max-w-4xl">
+                THE CREATOR
+                <span class="block mt-3 bg-gradient-to-r from-goldLight via-goldMid to-goldDark bg-clip-text text-transparent pb-2 text-theme-gradient">
+                    DEKHO MASTERS EVENT
+                </span>
+            </h2>
+            
+            <!-- Middle big text requested -->
+            <p class="text-3xl sm:text-5xl font-black text-amber-400 tracking-widest uppercase mt-12 mb-6 animate-pulse text-theme-element">
+                🚀 COMING SOON
+            </p>
+            
+            <p class="mt-4 text-sm sm:text-base text-slate-400 max-w-2xl mx-auto font-light leading-relaxed">
+                We are custom-engineering verified esports tournament lobbies, anti-cheat live streams, and sponsor payouts platforms under absolute clarity standards. Stay tuned for registration queues.
+            </p>
+
+            <button onclick="switchTab('contact')" class="mt-10 px-8 py-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-white font-extrabold tracking-wider transition-all">
+                GET CONTACT NOTIFIED &rarr;
+            </button>
+        </div>
+    </section>
+
+    <section id="tab-contact" class="tab-content hidden max-w-7xl mx-auto px-4 md:px-8 py-8 animate-fade-in">
+        <div class="text-center mb-16">
+            <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Connect with Us Today</span>
+            <h2 class="text-4xl md:text-5xl font-black text-white mt-2">Professional Career & Brand Guidance</h2>
+            <p class="text-slate-400 mt-4 max-w-2xl mx-auto font-light leading-relaxed">
+                Connect directly with our operations and management desk. We respond to all professional creator and developer queries within 24 business hours.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <!-- Contact Card: Email -->
+            <div class="bg-orynexCard border border-white/5 rounded-3xl p-8 hover:border-amber-500/20 transition-all duration-300 relative group text-center">
+                <div class="absolute -top-12 -right-12 w-24 h-24 bg-amber-500/5 rounded-full blur-[40px] pointer-events-none"></div>
+                <div class="w-14 h-14 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-2xl flex items-center justify-center mx-auto text-xl mb-6 group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-envelope"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-200 uppercase tracking-wide">Email Address</h3>
+                <p class="text-xs text-slate-400 mt-1.5 font-light leading-relaxed">Send pitch decks, creator portfolios, or event sponsorship requests.</p>
+                
+                <div class="mt-6 bg-orynexDark border border-white/5 rounded-2xl p-4">
+                    <a href="mailto:orynexstudio@gmail.com" class="text-base font-black text-amber-400 hover:underline">orynexstudio@gmail.com</a>
+                </div>
+                
+                <button onclick="copyMailText('orynexstudio@gmail.com')" class="mt-4 text-xs font-bold text-slate-400 hover:text-white transition-colors">
+                    <i class="fa-regular fa-clipboard mr-1.5"></i> Copy Email
+                </button>
+            </div>
+
+            <!-- Contact Card: Instagram -->
+            <div class="bg-orynexCard border border-white/5 rounded-3xl p-8 hover:border-amber-500/20 transition-all duration-300 relative group text-center">
+                <div class="absolute -top-12 -right-12 w-24 h-24 bg-amber-500/5 rounded-full blur-[40px] pointer-events-none"></div>
+                <div class="w-14 h-14 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-2xl flex items-center justify-center mx-auto text-xl mb-6 group-hover:scale-105 transition-transform">
+                    <i class="fa-brands fa-instagram"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-200 uppercase tracking-wide">Instagram Profile</h3>
+                <p class="text-xs text-slate-400 mt-1.5 font-light leading-relaxed">Follow our active updates, match schedules, and platform highlights.</p>
+                
+                <div class="mt-6 bg-orynexDark border border-white/5 rounded-2xl p-4">
+                    <a href="https://instagram.com/orynexlabs" target="_blank" rel="noopener noreferrer" class="text-base font-black text-amber-400 hover:underline">orynexlabs</a>
+                </div>
+                
+                <button onclick="copyMailText('orynexlabs')" class="mt-4 text-xs font-bold text-slate-400 hover:text-white transition-colors">
+                    <i class="fa-regular fa-clipboard mr-1.5"></i> Copy Handle
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="tab-collaboration" class="tab-content hidden max-w-7xl mx-auto px-4 md:px-8 py-8 animate-fade-in">
+        <div class="min-h-[500px] flex flex-col items-center justify-center text-center relative rounded-3xl border border-white/5 bg-orynexCard overflow-hidden py-16 px-6">
+            <div class="absolute -top-32 -right-32 w-96 h-96 bg-amber-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+            
+            <div class="w-20 h-20 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-3xl flex items-center justify-center mx-auto text-3xl mb-8">
+                <i class="fa-solid fa-handshake"></i>
+            </div>
+            
+            <h2 class="text-4xl sm:text-6xl font-black tracking-tight leading-none text-white max-w-4xl">
+                ORYNEX COLLABORATION LIST
+            </h2>
+            
+            <!-- Middle big text requested -->
+            <p class="text-3xl sm:text-5xl font-black text-amber-400 tracking-widest uppercase mt-12 mb-6 animate-pulse text-theme-element">
+                🚀 COMING SOON
+            </p>
+            
+            <p class="mt-6 text-sm sm:text-base text-slate-400 max-w-2xl mx-auto font-light leading-relaxed">
+                The absolute portal for verifying partner contracts, direct creator-to-brand pairings, and active match sponsorship tracking is currently being deployed. Stay tuned.
+            </p>
+        </div>
+    </section>
+
+    <section class="py-20 border-t border-white/5 bg-[#070B14] text-center relative z-10 mt-16 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-amber-500/[0.01] to-transparent pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 items-center justify-center opacity-40">
+                <div class="text-sm md:text-base font-black tracking-widest text-slate-400 hover:text-white transition-all cursor-default">VALORANT</div>
+                <div class="text-sm md:text-base font-black tracking-widest text-slate-400 hover:text-white transition-all cursor-default">BGMI / PUBG</div>
+                <div class="text-sm md:text-base font-black tracking-widest text-slate-400 hover:text-white transition-all cursor-default">FREEFIRE MAX</div>
+                <div class="text-sm md:text-base font-black tracking-widest text-slate-400 hover:text-white transition-all cursor-default">CALL OF COD</div>
+                <div class="text-sm md:text-base font-black tracking-widest text-slate-400 hover:text-white transition-all cursor-default">APEX LEGENDS</div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="border-t border-white/10 bg-orynexDark py-16 px-4 md:px-8 relative z-10">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
+            <div class="md:col-span-2 space-y-4">
+                <span class="font-black text-3xl tracking-widest bg-gradient-to-r from-white via-goldMid to-goldDark bg-clip-text text-transparent">ORYNEX</span>
+                <p class="text-xs text-slate-400 max-w-sm leading-relaxed font-light">
+                    Securing premium brand deals to elevate channel positioning, expand engagement values, and construct transparent, multi-month revenue packages.
+                </p>
+                <div class="text-[10px] text-amber-500/75 tracking-wider font-mono font-bold pt-4">
+                    © 2026 ORYNEX AGENCY. BUILT WITH ABSOLUTE CLARITY STANDARDS.
+                </div>
+            </div>
+            <div>
+                <h5 class="text-xs font-extrabold text-white uppercase tracking-widest mb-4">Sectors & Features</h5>
+                <ul class="space-y-3.5 text-xs text-slate-400">
+                    <li><button onclick="switchTab('creators')" class="hover:text-amber-400 transition-all text-left">For Creators</button></li>
+                    <li><button onclick="switchTab('developers')" class="hover:text-amber-400 transition-all text-left">For Developers</button></li>
+                    <li><button onclick="switchTab('masters')" class="hover:text-amber-400 transition-all text-left">Dekho Masters Arena</button></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="text-xs font-extrabold text-white uppercase tracking-widest mb-4">Core Ethical Standard</h5>
+                <ul class="space-y-3 text-xs text-slate-400 font-light">
+                    <li>Full Escrow Verification</li>
+                    <li>Guaranteed Sponsor Outreach</li>
+                    <li>Dedicated Business Advisors</li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tab switching logic
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+            });
+            // Show selected tab
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+            // Reset navigation highlight styles
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = 'nav-btn px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 text-slate-400 hover:text-white hover:bg-white/5 border border-transparent';
+            });
+            
+            // Apply focus border & text to selected
+            const activeBtn = document.getElementById('nav-' + tabId);
+            if (activeBtn) {
+                activeBtn.className = 'nav-btn px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 bg-amber-500/20 border border-amber-500/30 text-amber-400';
+            }
+
+            // Adjust high visibility collaboration button state
+            const headerCollab = document.getElementById('header-collab-btn');
+            if (tabId === 'collaboration') {
+                headerCollab.classList.remove('bg-amber-500', 'text-black');
+                headerCollab.classList.add('bg-amber-500/20', 'border', 'border-amber-500/50', 'text-amber-400');
+            } else {
+                headerCollab.className = 'shimmer-btn relative overflow-hidden rounded-full bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs tracking-wider px-6 py-3 transition-all duration-300 shadow-[0_0_20px_rgba(245,158,11,0.5)] hover:scale-105 active:scale-95';
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Mobile drawer panel toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('menu-icon');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.className = 'fa-solid fa-xmark text-xl';
+            } else {
+                menu.classList.add('hidden');
+                icon.className = 'fa-solid fa-bars text-xl';
+            }
+        }
+
+        // Premium Theme Switcher
+        function setTheme(theme) {
+            document.body.className = document.body.className.replace(/theme-\w+/g, 'theme-' + theme);
+            
+            // Adjust visual accents matching selection
+            const elementsToColor = document.querySelectorAll('.text-theme-element');
+            const textGradients = document.querySelectorAll('.text-theme-gradient');
+            
+            let hexColor = '#F59E0B'; // Gold base
+            let gradClass = 'from-goldLight via-goldMid to-goldDark';
+            
+            if (theme === 'cyber') {
+                hexColor = '#8B5CF6'; // Violet neon
+                gradClass = 'from-violet-300 via-violet-500 to-purple-800';
+            } else if (theme === 'emerald') {
+                hexColor = '#10B981'; // Emerald esports
+                gradClass = 'from-emerald-300 via-emerald-500 to-teal-800';
+            }
+
+            elementsToColor.forEach(el => {
+                el.style.color = hexColor;
+            });
+            
+            textGradients.forEach(el => {
+                el.className = `block mt-3 bg-gradient-to-r ${gradClass} bg-clip-text text-transparent pb-2 text-theme-gradient`;
+            });
+
+            triggerToast(`Atmospheric visual profile set to: ${theme.toUpperCase()}`, 'info');
+        }
+
+        // Custom Toast Notification System
+        function triggerToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let colorStyle = 'bg-emerald-500 text-black';
+            let icon = '<i class="fa-solid fa-circle-check"></i>';
+            
+            if (type === 'info') {
+                colorStyle = 'bg-[#0F172A] text-amber-400 border border-amber-500/30';
+                icon = '<i class="fa-solid fa-circle-info"></i>';
+            } else if (type === 'error') {
+                colorStyle = 'bg-rose-600 text-white';
+                icon = '<i class="fa-solid fa-triangle-exclamation"></i>';
+            }
+
+            toast.className = `flex items-center gap-3 px-4.5 py-3 rounded-xl shadow-2xl text-xs font-bold ${colorStyle} pointer-events-auto transition-all transform translate-y-2 opacity-0 duration-300 animate-fade-in`;
+            toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+            
+            container.appendChild(toast);
+            
+            // Automate sliding removal
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // Copy direct mail or details helper
+        function copyEmail() {
+            copyMailTextRaw('orynexstudio@gmail.com');
+            triggerToast('Sponsorship Email copied successfully!', 'success');
+        }
+
+        function copyMailText(text) {
+            copyMailTextRaw(text);
+            triggerToast(`Copied text: ${text}`, 'success');
+        }
+
+        function copyMailTextRaw(text) {
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+        }
+    </script>
+</body>
+</html>
